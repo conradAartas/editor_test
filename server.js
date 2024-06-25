@@ -66,6 +66,34 @@ app.post("/create", async (req, res) => {
     }
 });
 
+app.put("/update/:id", async (req, res) => {
+    try {
+        let id = req.params.id;
+        if(!id) {
+            res.status(400).json({status: false, message: "Invalid Id"});
+        }
+        let {title, json_data} = req.body;
+
+        if(json_data && typeof json_data !== 'string') json_data = JSON.stringify(json_data);
+
+        let editor = await Editor.findOne({ where: { id } });
+
+        if(editor){
+            editor.title = title;
+            editor.json_data = json_data;
+            await editor.save();
+
+            res.status(200).send({status: true, message: "success", data: editor});
+        } else {
+            res.status(400).json({status: false, message: "Editor not found"});
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({status: false, message: "Internal Server Error"});
+    }
+});
+
 app.use("*", (req, res) => {
     res.send("No route found");
 });
