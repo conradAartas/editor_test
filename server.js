@@ -66,7 +66,7 @@ app.post("/create", async (req, res) => {
     }
 });
 
-app.put("/update/:id", async (req, res) => {
+app.post("/update/:id", async (req, res) => {
     try {
         let id = req.params.id;
         if(!id) {
